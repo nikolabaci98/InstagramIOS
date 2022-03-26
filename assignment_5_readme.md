@@ -23,11 +23,11 @@ The following **bonus** features are implemented:
 
 Here's a walkthrough of the required user stories:
 
-<img src='required_user_stories.mov' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='required_stories.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 
 Here's a walkthrough of the optional user stories:
 
-<img src='bonus_user_stories_1.mov' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='bonusstories_1.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
-<img src='bonus_user_stories_2.mov' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='bonus_stories_2.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
