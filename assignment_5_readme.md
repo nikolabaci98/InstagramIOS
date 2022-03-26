@@ -28,6 +28,6 @@ Here's a walkthrough of the required user stories:
 
 Here's a walkthrough of the optional user stories:
 
-<img src='bonusstories_1.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='bonus_stories_1.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 <img src='bonus_stories_2.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
