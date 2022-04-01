@@ -11,10 +11,12 @@ import Parse
 class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     
-
+    @IBOutlet weak var editProfileButton: UIButton!
     @IBOutlet weak var profileImage: UIImageView!
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var profileTableView: UITableView!
+    @IBOutlet weak var bioLabel: UILabel!
+    var user: PFUser? = nil
     var posts = [PFObject]()
     
     
@@ -28,12 +30,27 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        if user == nil { //profile tab button, check self's profile
+            user = PFUser.current()
+        }
+        
+        if user != PFUser.current() {
+            editProfileButton.isHidden = true
+        }
         populateProfile()
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        self.user = nil
+    }
+    
+    @IBAction func editProfilePressed(_ sender: UIButton) {
+        performSegue(withIdentifier: K.profileToDetail, sender: self)
+    }
+    
+    
     func populateProfile() {
-        print("updating tableview")
-        let user = PFUser.current()
+        
         let query = PFQuery(className: "Posts")
         query.includeKey("author")
         query.order(byDescending: "createdAt")
@@ -54,6 +71,13 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             let urlString = imageFile.url!
             profileImage.af.setImage(withURL: URL(string: urlString)!)
         }
+        
+        let bio = user?["bio"] as? String
+        if bio == nil {
+            bioLabel.isHidden = true
+        } else {
+            bioLabel.text = bio
+        }
     }
     
     
@@ -62,7 +86,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ProfileTableViewCell") as! ProfileTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: K.profileTableViewCellID) as! ProfileTableViewCell
         let post = posts[indexPath.row]
         
         let user = post["author"] as! PFUser
@@ -83,11 +107,14 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         cell.deleteButton.tag = indexPath.row
         
+        if user != PFUser.current() {
+            cell.deleteButton.isHidden = true
+        }
+        
         return cell
     }
     
     @IBAction func deletePostPressed(_ sender: UIButton) {
-        print("delete button pressed")
         let index = sender.tag
         let postToDelete = posts[index]
         print(postToDelete)

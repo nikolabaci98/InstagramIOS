@@ -8,7 +8,7 @@
 import UIKit
 import CameraManager
 
-class Camera: UIViewController {
+class CameraViewController: UIViewController {
 
     @IBOutlet weak var cameraView: UIView!
     let cameraManager = CameraManager()

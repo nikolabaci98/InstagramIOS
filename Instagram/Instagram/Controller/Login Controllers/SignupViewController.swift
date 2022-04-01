@@ -28,25 +28,15 @@ class SignupViewController: UIViewController {
     }
 
     @IBAction func signupPressed(_ sender: UIButton) {
-        let user = PFUser()
-        
         let username = usernameTextField.text
         let password = passwordTextField.text
         let fullname = fullnameTextField.text
-        
-        if password != "" && username != "" && fullname != "" {
-            user.username = username
-            user.password = password
-            user["fullname"] = fullname
-            
-            user.signUpInBackground { success, error in
-                if let error = error {
-                    print("Error on sign up: \(error)")
-                    return
-                }
-                self.performSegue(withIdentifier: K.signupToHomeSegue, sender: self)
-            }
-        }
+        let signup = Signup(username: username!, password: password!, fullname: fullname!, self)
+        signup.signup()
+    }
+    
+    func userCreated() {
+        performSegue(withIdentifier: K.signupToHomeSegue, sender: self)
     }
     
     @IBAction func loginPressed(_ sender: UIButton) {

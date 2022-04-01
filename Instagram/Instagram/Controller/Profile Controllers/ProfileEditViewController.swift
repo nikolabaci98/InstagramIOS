@@ -14,7 +14,7 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
     @IBOutlet weak var fullnameTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var bioTextField: UITextField!
-    
+    var imageChanged = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,7 +36,7 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
         
     }
     
-    @IBAction func onSavePressed(_ sender: UIBarButtonItem) {
+    @IBAction func onSavePressed(_ sender: UIButton) {
         let user = PFUser.current()
         let name = fullnameTextField.text
         if name != "" {
@@ -53,10 +53,11 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
             user?["bio"] = bio
         }
         
-        
-        let imageData = profileImage.image!.pngData()
-        let file = PFFileObject(name: "image.png", data: imageData!)
-        user?["profile_image"] = file
+        if imageChanged {
+            let imageData = profileImage.image!.pngData()
+            let file = PFFileObject(name: "image.png", data: imageData!)
+            user?["profile_image"] = file
+        }
 
         user?.saveInBackground { success, error in
             if let error = error {
@@ -64,31 +65,49 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
                 return
             }
             print("saved image successfully")
-            self.navigationController?.popToRootViewController(animated: true)
+            self.performSegue(withIdentifier: K.detailToProfile, sender: self)
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == K.detailToProfile {
+            let tabbarVC = segue.destination
+            tabbarVC.tabBarController?.selectedIndex = 1
         }
     }
     
     @IBAction func onProfileImagePressed(_ sender: UITapGestureRecognizer) {
-            let picker = UIImagePickerController()
-            picker.delegate = self
-            picker.allowsEditing = true
-    
-            if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                picker.sourceType = .camera
-            } else {
-                picker.sourceType = .photoLibrary
-            }
-    
-            present(picker, animated: true, completion: nil)
+        changeProfilePicture()
     }
     
+    @IBAction func onEditImageButtonPressed(_ sender: UIButton) {
+        changeProfilePicture()
+    }
+    
+    @IBAction func cancleProfileEdit(_ sender: UIButton) {
+        dismiss(animated: true)
+    }
+    func changeProfilePicture() {
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.allowsEditing = true
+
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            picker.sourceType = .camera
+        } else {
+            picker.sourceType = .photoLibrary
+        }
+
+        present(picker, animated: true, completion: nil)
+    }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            let image = info[.editedImage] as! UIImage
-            let size = CGSize(width: 300, height: 300)
-            let scaledImage = image.af.imageScaled(to: size)
-    
-            profileImage.image = scaledImage
-            dismiss(animated: true, completion: nil)
+        let image = info[.editedImage] as! UIImage
+        let size = CGSize(width: 300, height: 300)
+        let scaledImage = image.af.imageScaled(to: size)
+
+        profileImage.image = scaledImage
+        imageChanged = true
+        dismiss(animated: true, completion: nil)
         }
 }

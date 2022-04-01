@@ -12,4 +12,6 @@ class ProfileTableViewCell: UITableViewCell {
     @IBOutlet weak var postImage: UIImageView!
     @IBOutlet weak var usernameAndCaptionLabel: UILabel!
     @IBOutlet weak var deleteButton: UIButton!
+    
+    
 }
